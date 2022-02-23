@@ -15,7 +15,8 @@ class TaskController extends Controller
      */
     public function index()
     {
-        echo 'index';
+        $tasks = Auth::user()->tasks;
+        return view('tasks.index', ['tasks'=>$tasks]);
     }
 
     /**
@@ -25,7 +26,7 @@ class TaskController extends Controller
      */
     public function create()
     {
-        //
+        return view('tasks.create');
     }
 
     /**
@@ -36,7 +37,13 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'name'=>'required|max:255',
+        ]);
+        Auth::user()->tasks()->create(['name'=>$request->name]);
+
+        return redirect(route('tasks.index'));
+
     }
 
     /**
